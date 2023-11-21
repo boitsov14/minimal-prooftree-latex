@@ -1,0 +1,18 @@
+\documentclass[preview,varwidth=\maxdimen,border=10pt]{standalone}
+\usepackage{ebproof}
+\begin{document}
+\begin{prooftree}
+    \infer0[\scriptsize Axiom]{ P &\vdash P }
+    \infer0[\scriptsize Axiom]{ P &\vdash P }
+    \infer0[\scriptsize Axiom]{ P &\vdash P }
+    \infer0[\scriptsize Axiom]{ P &\vdash P }
+    \infer0[\scriptsize Axiom]{ P &\vdash P }
+    \infer0[\scriptsize Axiom]{ P &\vdash P }
+    \infer0[\scriptsize Axiom]{ P &\vdash P }
+    \infer0[\scriptsize Axiom]{ P &\vdash P }
+    \infer0[\scriptsize Axiom]{ P &\vdash P }
+    \infer0[\scriptsize Axiom]{ P &\vdash P }
+    \infer{10}[\scriptsize $\land$: Right]{ P &\vdash P \land P \land P \land P \land P \land P \land P \land P \land P \land P }
+    \infer{1}[\scriptsize $\rightarrow$: Right]{ &\vdash P \rightarrow P \land P \land P \land P \land P \land P \land P \land P \land P \land P }
+\end{prooftree}
+\end{document}
