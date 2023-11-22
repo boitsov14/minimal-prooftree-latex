@@ -1,4 +1,5 @@
 # docker build -t ebproof-test .
+# docker run --entrypoint=sh -ti ebproof-test
 # docker cp container_name:app/out1.png .
 
 FROM alpine:latest AS installer
@@ -33,10 +34,16 @@ COPY --from=installer /usr/local/texlive/*/texmf-dist/web2c/texmf.cnf           
 COPY --from=installer /usr/local/texlive/*/bin/x86_64-linuxmusl/dvipng                  /usr/local/texlive/bin/x86_64-linuxmusl/dvipng
 COPY --from=installer /usr/local/texlive/*/bin/x86_64-linuxmusl/latex                   /usr/local/texlive/bin/x86_64-linuxmusl/latex
 
-FROM alpine:latest
+# FROM scratch
+FROM gcr.io/distroless/static-debian12:debug-nonroot
+# FROM alpine:latest
+# FROM debian:12-slim
 COPY --from=installer2 /usr/local/texlive /usr/local/texlive
+COPY --from=installer /lib/ld-musl-x86_64.so.1 /lib/ld-musl-x86_64.so.1
 ENV PATH=/usr/local/texlive/bin/x86_64-linuxmusl:$PATH
 WORKDIR /app
 COPY out.tex .
 
-CMD [ "sleep", "infinity" ]
+# RUN latex --version
+# RUN latex out.tex
+# CMD [ "sleep", "infinity" ]
