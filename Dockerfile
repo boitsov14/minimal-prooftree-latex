@@ -1,6 +1,6 @@
 # docker build -t ebproof-test .
 # docker run --entrypoint=sh -ti ebproof-test
-# docker cp container_name:app/out1.png .
+# docker cp container_name:app/proof1.png .
 
 FROM alpine:latest AS installer
 RUN apk add --no-cache perl tar wget
@@ -14,6 +14,7 @@ ENV PATH=/usr/local/bin/texlive:$PATH
 RUN tlmgr install \
   amsfonts \
   dvipng \
+  dvisvgm \
   ebproof \
   latex-bin \
   preview \
@@ -32,7 +33,9 @@ COPY --from=installer /usr/local/texlive/*/texmf-dist/tex/generic/xkeyval       
 COPY --from=installer /usr/local/texlive/*/texmf-dist/tex/latex                         /usr/local/texlive/texmf-dist/tex/latex
 COPY --from=installer /usr/local/texlive/*/texmf-dist/web2c/texmf.cnf                   /usr/local/texlive/texmf-dist/web2c/texmf.cnf
 COPY --from=installer /usr/local/texlive/*/bin/x86_64-linuxmusl/dvipng                  /usr/local/texlive/bin/x86_64-linuxmusl/dvipng
+COPY --from=installer /usr/local/texlive/*/bin/x86_64-linuxmusl/dvisvgm                 /usr/local/texlive/bin/x86_64-linuxmusl/dvisvgm
 COPY --from=installer /usr/local/texlive/*/bin/x86_64-linuxmusl/latex                   /usr/local/texlive/bin/x86_64-linuxmusl/latex
+COPY --from=installer /usr/local/texlive/*/bin/x86_64-linuxmusl/pdflatex                /usr/local/texlive/bin/x86_64-linuxmusl/pdflatex
 
 # FROM scratch
 FROM gcr.io/distroless/static-debian12:debug-nonroot
@@ -42,8 +45,6 @@ COPY --from=installer2 /usr/local/texlive /usr/local/texlive
 COPY --from=installer /lib/ld-musl-x86_64.so.1 /lib/ld-musl-x86_64.so.1
 ENV PATH=/usr/local/texlive/bin/x86_64-linuxmusl:$PATH
 WORKDIR /app
-COPY out.tex .
+COPY proof.tex .
 
-# RUN latex --version
-# RUN latex out.tex
 # CMD [ "sleep", "infinity" ]
