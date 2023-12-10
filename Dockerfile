@@ -54,4 +54,4 @@ COPY --from=production /usr /usr
 COPY --from=production /lib /lib
 ENV PATH=/usr/local/texlive/bin/x86_64-linuxmusl:$PATH
 WORKDIR /app
-COPY proof.tex .
+COPY proof.tex proof_bussproofs.tex ./

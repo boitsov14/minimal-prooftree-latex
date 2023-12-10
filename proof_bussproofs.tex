@@ -1,0 +1,17 @@
+\documentclass[preview,varwidth=\maxdimen,border=10pt]{standalone}
+\usepackage{bussproofs}
+\begin{document}
+\begin{prooftree}
+\renewcommand{\fCenter}{\ \mbox{$\vdash$}\ }
+\AxiomC{}
+\RightLabel{\scriptsize Axiom}
+\UnaryInf$\alpha \fCenter \forall$
+\AxiomC{}
+\RightLabel{\scriptsize Axiom}
+\UnaryInf$P\fCenter P$
+\RightLabel{\scriptsize $\land$: Right}
+\BinaryInf$P\fCenter P \land P$
+\RightLabel{\scriptsize $\rightarrow$: Right}
+\UnaryInf$\fCenter P \rightarrow (P \land P)$
+\end{prooftree}
+\end{document}
