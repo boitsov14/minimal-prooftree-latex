@@ -25,7 +25,7 @@ RUN tlmgr install \
 RUN mkdir -p /bundle/usr/lib /bundle/lib
 RUN ldd /usr/bin/pdftocairo | grep "=>" | awk '{print $3}' | xargs -I '{}' cp -L '{}' /bundle'{}'
 
-FROM scratch AS installer2
+FROM scratch AS production
 COPY --from=installer /usr/local/texlive/*/texmf-var/web2c/pdftex/latex.fmt             /usr/local/texlive/texmf-var/web2c/pdftex/latex.fmt
 COPY --from=installer /usr/local/texlive/*/texmf-var/web2c/pdftex/pdflatex.fmt          /usr/local/texlive/texmf-var/web2c/pdftex/pdflatex.fmt
 COPY --from=installer /usr/local/texlive/*/texmf-var/ls-R                               /usr/local/texlive/texmf-var/ls-R
@@ -50,8 +50,8 @@ FROM scratch
 # FROM gcr.io/distroless/static-debian12:debug-nonroot
 # FROM alpine:latest
 # FROM debian:12-slim
-COPY --from=installer2 /usr /usr
-COPY --from=installer2 /lib /lib
+COPY --from=production /usr /usr
+COPY --from=production /lib /lib
 ENV PATH=/usr/local/texlive/bin/x86_64-linuxmusl:$PATH
 WORKDIR /app
 COPY proof.tex .
