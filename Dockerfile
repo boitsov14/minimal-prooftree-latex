@@ -14,7 +14,6 @@ ENV PATH=/usr/local/bin/texlive:$PATH
 RUN tlmgr install \
   amsfonts \
   dvipng \
-  dvisvgm \
   ebproof \
   latex-bin \
   preview \
@@ -35,7 +34,6 @@ COPY --from=installer /usr/local/texlive/*/texmf-dist/tex/generic/xkeyval       
 COPY --from=installer /usr/local/texlive/*/texmf-dist/tex/latex                         /usr/local/texlive/texmf-dist/tex/latex
 COPY --from=installer /usr/local/texlive/*/texmf-dist/web2c/texmf.cnf                   /usr/local/texlive/texmf-dist/web2c/texmf.cnf
 COPY --from=installer /usr/local/texlive/*/bin/x86_64-linuxmusl/dvipng                  /usr/local/texlive/bin/x86_64-linuxmusl/dvipng
-COPY --from=installer /usr/local/texlive/*/bin/x86_64-linuxmusl/dvisvgm                 /usr/local/texlive/bin/x86_64-linuxmusl/dvisvgm
 COPY --from=installer /usr/local/texlive/*/bin/x86_64-linuxmusl/latex                   /usr/local/texlive/bin/x86_64-linuxmusl/latex
 COPY --from=installer /usr/local/texlive/*/bin/x86_64-linuxmusl/pdflatex                /usr/local/texlive/bin/x86_64-linuxmusl/pdflatex
 
@@ -82,8 +80,8 @@ COPY --from=installer /usr/lib/libbsd.so.0 /usr/lib/libbsd.so.0
 COPY --from=installer /usr/lib/libsharpyuv.so.0 /usr/lib/libsharpyuv.so.0
 COPY --from=installer /usr/lib/libmd.so.0 /usr/lib/libmd.so.0
 
-# FROM scratch
-FROM gcr.io/distroless/static-debian12:debug-nonroot
+FROM scratch
+# FROM gcr.io/distroless/static-debian12:debug-nonroot
 # FROM alpine:latest
 # FROM debian:12-slim
 COPY --from=installer2 /usr /usr
