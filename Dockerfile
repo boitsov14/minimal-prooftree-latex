@@ -13,6 +13,7 @@ RUN ln -sf /usr/local/texlive/*/bin/* /usr/local/bin/texlive
 ENV PATH=/usr/local/bin/texlive:$PATH
 RUN tlmgr install \
   amsfonts \
+  bussproofs \
   dvipng \
   ebproof \
   latex-bin \
