@@ -1,3 +1,6 @@
-proof*1.png
-proof*.svg
-proof*.pdf
+*.png
+*.svg
+*.pdf
+*.aux
+*.dvi
+*.log

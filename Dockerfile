@@ -1,10 +1,20 @@
-# docker build -t ebproof-test .
+# docker build -t proof-test .
 # docker run --entrypoint=sh -ti ebproof-test
 # exit
 # docker cp container_name:app/proof1.png .
 
+# ref: https://tex.stackexchange.com/questions/268997
+
+# latex -halt-on-error -interaction=nonstopmode -output-directory out ebproof.tex
+# pdflatex -output-directory out ebproof.tex
+# dvipng -D 600 -o out/ebproof.png out/ebproof.dvi
+# dvisvgm --no-fonts --bbox=preview -o out/ebproof.svg out/ebproof.dvi
+
+# latex -halt-on-error -interaction=nonstopmode -output-directory out forest.tex
+# dvisvgm --no-fonts --bbox=preview -o out/forest.svg out/forest.dvi
+
 FROM alpine:latest AS installer
-RUN apk add --no-cache perl poppler-utils tar wget
+RUN apk add --no-cache perl tar wget
 WORKDIR /install-tl-unx
 RUN wget https://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz
 RUN tar xvzf ./install-tl-unx.tar.gz --strip-components=1
@@ -15,43 +25,27 @@ ENV PATH=/usr/local/bin/texlive:$PATH
 RUN tlmgr install \
   amsfonts \
   bussproofs \
+  cbfonts-fd \
   dvipng \
+  dvips \
+  dvisvgm \
   ebproof \
+  forest \
+  greek-fontenc \
   latex-bin \
+  lplfitch \
   preview \
   standalone \
+  tools \
   varwidth \
   xkeyval
-RUN mkdir -p /bundle/usr/lib /bundle/lib
-RUN ldd /usr/bin/pdftocairo | grep "=>" | awk '{print $3}' | xargs -I '{}' cp -L '{}' /bundle'{}'
-
-FROM scratch AS temp
-COPY --from=installer /usr/local/texlive/*/texmf-var/web2c/pdftex/latex.fmt             /usr/local/texlive/texmf-var/web2c/pdftex/latex.fmt
-COPY --from=installer /usr/local/texlive/*/texmf-var/web2c/pdftex/pdflatex.fmt          /usr/local/texlive/texmf-var/web2c/pdftex/pdflatex.fmt
-COPY --from=installer /usr/local/texlive/*/texmf-var/ls-R                               /usr/local/texlive/texmf-var/ls-R
-COPY --from=installer /usr/local/texlive/*/texmf-var/fonts/map/dvips/updmap/psfonts.map /usr/local/texlive/texmf-var/fonts/map/dvips/updmap/psfonts.map
-COPY --from=installer /usr/local/texlive/*/texmf-var/fonts/map/pdftex/updmap/pdftex.map /usr/local/texlive/texmf-var/fonts/map/pdftex/updmap/pdftex.map
-COPY --from=installer /usr/local/texlive/*/texmf-dist/fonts/tfm/public/cm               /usr/local/texlive/texmf-dist/fonts/tfm/public/cm
-COPY --from=installer /usr/local/texlive/*/texmf-dist/fonts/type1/public/amsfonts/cm    /usr/local/texlive/texmf-dist/fonts/type1/public/amsfonts/cm
-COPY --from=installer /usr/local/texlive/*/texmf-dist/ls-R                              /usr/local/texlive/texmf-dist/ls-R
-COPY --from=installer /usr/local/texlive/*/texmf-dist/tex/generic/xkeyval               /usr/local/texlive/texmf-dist/tex/generic/xkeyval
-COPY --from=installer /usr/local/texlive/*/texmf-dist/tex/latex                         /usr/local/texlive/texmf-dist/tex/latex
-COPY --from=installer /usr/local/texlive/*/texmf-dist/web2c/texmf.cnf                   /usr/local/texlive/texmf-dist/web2c/texmf.cnf
-COPY --from=installer /usr/local/texlive/*/bin/x86_64-linuxmusl/dvipng                  /usr/local/texlive/bin/x86_64-linuxmusl/dvipng
-COPY --from=installer /usr/local/texlive/*/bin/x86_64-linuxmusl/latex                   /usr/local/texlive/bin/x86_64-linuxmusl/latex
-COPY --from=installer /usr/local/texlive/*/bin/x86_64-linuxmusl/pdflatex                /usr/local/texlive/bin/x86_64-linuxmusl/pdflatex
-
-COPY --from=installer /lib/ld-musl-x86_64.so.1 /lib/ld-musl-x86_64.so.1
-
-COPY --from=installer /usr/bin/pdftocairo /usr/bin/pdftocairo
-COPY --from=installer /bundle/ /.
 
 FROM scratch
-# FROM gcr.io/distroless/static-debian12:debug-nonroot
-# FROM alpine:latest
-# FROM debian:12-slim
-COPY --from=temp / /
+COPY --from=installer /usr/local/texlive /usr/local/texlive
 
-# ENV PATH=/usr/local/texlive/bin/x86_64-linuxmusl:$PATH
-# WORKDIR /app
-# COPY proof.tex proof_bussproofs.tex ./
+# FROM alpine:latest
+# RUN apk add --no-cache imagemagick ghostscript
+# COPY --from=installer /usr/local/texlive /usr/local/texlive
+# RUN ln -sf /usr/local/texlive/*/bin/* /usr/local/bin/texlive
+# ENV PATH=/usr/local/bin/texlive:$PATH
+# CMD [ "sleep", "infinity" ]

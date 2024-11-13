@@ -1,8 +1,8 @@
 \documentclass[preview,varwidth=\maxdimen,border=10pt]{standalone}
-\usepackage{ebproof}
+\usepackage{alphabeta, ebproof, lplfitch}
 \begin{document}
 \begin{prooftree}
-    \infer0[\scriptsize Axiom]{ \alpha &\vdash \forall }
+    \infer0[\scriptsize Axiom]{ \alpha α &\vdash \forall \liff }
     \infer0[\scriptsize Axiom]{ P &\vdash P }
     \infer0[\scriptsize Axiom]{ P &\vdash P }
     \infer0[\scriptsize Axiom]{ P &\vdash P }
