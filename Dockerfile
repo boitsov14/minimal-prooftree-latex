@@ -7,7 +7,7 @@ COPY texlive.profile .
 RUN ./install-tl --profile=texlive.profile
 RUN ln -sf /usr/local/texlive/*/bin/* /usr/local/bin/texlive
 ENV PATH=/usr/local/bin/texlive:$PATH
-RUN tlmgr install bussproofs cbfonts-fd dvipng dvisvgm ebproof forest greek-fontenc lplfitch preview standalone varwidth
+RUN tlmgr install bussproofs cbfonts-fd dvisvgm ebproof forest greek-fontenc lplfitch preview standalone varwidth
 
 FROM scratch
 COPY --from=installer /usr/local/texlive /usr/local/texlive
@@ -17,4 +17,5 @@ COPY --from=installer /usr/local/texlive /usr/local/texlive
 # COPY --from=installer /usr/local/texlive /usr/local/texlive
 # RUN ln -sf /usr/local/texlive/*/bin/* /usr/local/bin/texlive
 # ENV PATH=/usr/local/bin/texlive:$PATH
+# WORKDIR /app
 # CMD [ "sleep", "infinity" ]
