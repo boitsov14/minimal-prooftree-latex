@@ -14,3 +14,5 @@ latex -halt-on-error -interaction=nonstopmode -output-directory out examples/for
 pdflatex -halt-on-error -interaction=nonstopmode -output-directory out examples/forest.tex
 gs -sDEVICE=pngmono -r600 -o out/forest.png out/forest.pdf
 dvisvgm --font-format=woff2 --bbox=preview --optimize -o out/forest.svg out/forest.dvi
+
+rm out/*.aux out/*.dvi out/*.log
