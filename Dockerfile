@@ -13,7 +13,7 @@ FROM scratch
 COPY --from=installer /usr/local/texlive /usr/local/texlive
 
 # FROM alpine:latest
-# RUN apk --no-cache add imagemagick ghostscript
+# RUN apk --no-cache add ghostscript
 # COPY --from=installer /usr/local/texlive /usr/local/texlive
 # RUN ln -sf /usr/local/texlive/*/bin/* /usr/local/bin/texlive
 # ENV PATH=/usr/local/bin/texlive:$PATH
