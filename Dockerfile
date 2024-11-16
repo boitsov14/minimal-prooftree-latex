@@ -1,3 +1,5 @@
+# docker build -t minimal-prooftree-latex .
+
 FROM alpine:latest AS installer
 RUN apk --no-cache add perl tar wget
 WORKDIR /install-tl-unx

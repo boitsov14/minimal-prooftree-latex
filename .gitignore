@@ -1,6 +1,1 @@
-*.png
-*.svg
-*.pdf
-*.aux
-*.dvi
-*.log
+out/

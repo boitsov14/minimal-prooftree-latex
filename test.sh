@@ -1,5 +1,3 @@
-# docker build -t proof-test .
-
 rm out/*
 
 for texfile in examples/*.tex; do
