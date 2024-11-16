@@ -1,18 +1,15 @@
 # docker build -t proof-test .
 
-latex -halt-on-error -interaction=nonstopmode -output-directory out examples/bussproofs.tex
-pdflatex -halt-on-error -interaction=nonstopmode -output-directory out examples/bussproofs.tex
-gs -sDEVICE=pngmono -r600 -o out/bussproofs.png out/bussproofs.pdf
-dvisvgm --font-format=woff2 --bbox=preview --optimize -o out/bussproofs.svg out/bussproofs.dvi
+rm out/*
 
-latex -halt-on-error -interaction=nonstopmode -output-directory out examples/ebproof.tex
-pdflatex -halt-on-error -interaction=nonstopmode -output-directory out examples/ebproof.tex
-gs -sDEVICE=pngmono -r600 -o out/ebproof.png out/ebproof.pdf
-dvisvgm --font-format=woff2 --bbox=preview --optimize -o out/ebproof.svg out/ebproof.dvi
-
-latex -halt-on-error -interaction=nonstopmode -output-directory out examples/forest.tex
-pdflatex -halt-on-error -interaction=nonstopmode -output-directory out examples/forest.tex
-gs -sDEVICE=pngmono -r600 -o out/forest.png out/forest.pdf
-dvisvgm --font-format=woff2 --bbox=preview --optimize -o out/forest.svg out/forest.dvi
+for texfile in examples/*.tex; do
+    name=$(basename "$texfile" .tex)
+    latex -halt-on-error -interaction=nonstopmode -output-directory out "$texfile"
+    dvisvgm --bbox=preview --bitmap-format=none --font-format=woff2 --optimize --relative -o "out/${name}.svg" "out/${name}.dvi"
+    pdflatex -halt-on-error -interaction=nonstopmode -output-directory out "$texfile"
+    gs -dBATCH -dNOPAUSE -r600 -sDEVICE=pngmono -o "out/${name}.png" "out/${name}.pdf"
+    gs -dBATCH -dCompatibilityLevel=1.5 -dNOPAUSE -sDEVICE=pdfwrite -o "out/${name}_comp.pdf" "out/${name}.pdf"
+    mv "out/${name}_comp.pdf" "out/${name}.pdf" 
+done
 
 rm out/*.aux out/*.dvi out/*.log
