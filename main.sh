@@ -1,6 +1,6 @@
 rm out/*
 
-for texfile in examples/*.tex; do
+for texfile in in/*.tex; do
     name=$(basename "$texfile" .tex)
     latex -halt-on-error -interaction=nonstopmode -output-directory out "$texfile"
     dvisvgm --bbox=preview --bitmap-format=none --font-format=woff2 --optimize --relative -o "out/${name}.svg" "out/${name}.dvi"
