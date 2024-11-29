@@ -1,4 +1,6 @@
 # docker build -t minimal-prooftree-latex .
+# docker build -t boitsov14/minimal-prooftree-latex .
+# docker push boitsov14/minimal-prooftree-latex
 
 FROM alpine:latest AS installer
 RUN apk --no-cache add perl tar wget
